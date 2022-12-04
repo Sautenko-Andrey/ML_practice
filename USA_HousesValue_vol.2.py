@@ -77,7 +77,9 @@ datasets/housing в рабочей области, загрузке файла h
         тем самым мы обеспечим репрезетативность испытательного набора
         для различных категорий дохода в целом наборе данных'''
 
+        # загружаем данные
         housing = self.load_housing_data()
+        # создаем новый атрибут income_catразделяя median)cat на 5 групп (страт)
         housing['income_cat'] = pd.cut(housing['median_income'],
                                        bins=[0., 1.5, 3.0, 4.5, 6., np.inf],
                                        labels=[1, 2, 3, 4, 5])
@@ -133,7 +135,8 @@ datasets/housing в рабочей области, загрузке файла h
         котоая вычерчивает каждый числовой атрибут
          по отношению к другому числовому атрибуту.
          Мы сосредоточим внимание не на всех атрибутах,а на наиболее многообещающих,
-         которые представляются наиболее связанными со средней стоимостью дома.'''
+         которые представляются наиболее связанными со средней стоимостью дома.
+         '''
         # создадим копию обучающей выборки,чтобы не навредить оригиналу
         housing = self.strat_train_set.copy()
         attributes = ['median_house_value', 'median_income', 'total_rooms',
@@ -149,6 +152,10 @@ datasets/housing в рабочей области, загрузке файла h
 
     # экспериментирование с комбинациями атрибутов
     def experimenting_with_attributes_combinations(self):
+        '''В данном методе мы делаем своего рода эксперимент,
+        создавая новые атрибуты и смотрим, на сколько они взаимосвязаны
+        со средней ценой дома (т.е. как изменяется средняя стоимость дома в
+        зависимости от этих атрибутов)'''
         housing = self.strat_train_set.copy()
 
         # создадим атрибут количество комнат на дом
@@ -175,17 +182,16 @@ datasets/housing в рабочей области, загрузке файла h
 
     # ПОДГОТОВКА ДАННЫХ ДЛЯ АЛГОРИТМОВ МАШИННОГО ОБУЧЕНИЯ
     def prepearing_data_for_ML_alg(self):
-        ''''''
-        # скопируем обучающий набо и разделим на прогнозаторы и метки
-        housing = self.strat_train_set.drop('median_house_value', axis=1)
-        housing_labels = self.strat_train_set['median_house_value'].copy()
+        '''Подготовка данных'''
+        # скопируем обучающий набо и разделим на прогнозаторы и метки:
+        housing = self.strat_train_set.drop('median_house_value', axis=1)  # прогнозаторы
+        housing_labels = self.strat_train_set['median_house_value'].copy()  # метки
         return housing, housing_labels
 
         # ОЧИСТКА ДАННЫХ
 
     def clear_data(self):
-        '''Большинство алгоритмов ML не могут работать с недостающими признаками,
-        поэтому мы создадим несколько функций, которые позаботяться об этом.
+        '''Большинство алгоритмов ML не могут работать с недостающими признаками.
         Мы видели, что в атрибуте total_bedrooms не хватало ряда значений
         ,поэтому мы исправим это положение с помощью библиотеки Sccikit-Learn. '''
 
@@ -202,7 +208,7 @@ datasets/housing в рабочей области, загрузке файла h
         # т.к. медиана подсчитывается только на числовых атрибутах,
         # нам требуется создать копию данных без текстового атрибута
         # ocean_proximity:
-        housing_num = housing.drop('ocean_proximity', axis=1)
+        housing_num = housing.drop('ocean_proximity', axis=1)  # отбрасываем "ocean_proximity"
 
         # теперь экземпляр imputer можно подогнать к обучающим данным с приминением метода fit():
         imputer.fit(housing_num)
@@ -225,12 +231,16 @@ datasets/housing в рабочей области, загрузке файла h
     def handling_text_and_categorical_attrs_WITH_1HOTENCODER(self):
         '''В нашем наборе есть всего один текстовый атрибут ocean_proximity.
         Предыдущий метод handling_text_and_categorical_attrs нам не подходит,
+        мы использууем:
         класс OneHotEncoder для преобразования категориальных значений в векторы в унитарном коде'''
 
         # загрузим подготовленные данные:
         housing, housing_labels = self.prepearing_data_for_ML_alg()
+        # выделим категорию с "близость к океану"
         housing_cat = housing[['ocean_proximity']]
+        # создаем класс OneHotEncoder:
         cat_encoder = OneHotEncoder()
+        # делаем преобразование в вектор в унитарном коде:
         housing_cat_1hot = cat_encoder.fit_transform(housing_cat)
         return housing_cat_1hot
 

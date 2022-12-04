@@ -337,6 +337,12 @@ datasets/housing в рабочей области, загрузке файла h
         housing_cat_1hot = cat_encoder.fit_transform(housing_cat)
         return housing_cat_1hot
 
+    # МАСШТАБИРОВАНИЕ ПРИЗНАКОВ
+
+    #Конвееры трансформации
+    
+    
+
 
 user_1 = HousesValue()
 # user_1.work_with_train_data_copy()

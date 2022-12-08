@@ -3,13 +3,11 @@ import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 import numpy as np
-import matplotlib.pyplot as plt
 
 import keras
 from tensorflow import keras
 
 from keras.layers import Dense, Embedding, LSTM
-from keras.models import Sequential
 from keras.optimizers import Adam
 from keras.preprocessing.text import Tokenizer
 from keras_preprocessing.sequence import pad_sequences
